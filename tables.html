@@ -1,0 +1,151 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Table Listing Page</title>
+
+  <!-- Latest compiled and minified CSS & JS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://code.jquery.com/jquery.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+  <div class="container">
+    <div class="jumbotron">
+      <h1 class="text-center"><span class="fa fa-fire"></span> Hot Restaurant</h1>
+      <hr>
+      <h2 class="text-center">Current Reservations and Waiting List</h2>
+      <br>
+      <br>
+      <hr>
+
+
+      <div class="text-center">
+        <a href="localhost:3000/reserve"><button class="btn btn-danger btn-lg"><span class="fa fa-credit-card"></span> Make a
+            Reservation</button></a>
+        <a href="localhost:3000/">
+          <button class="btn btn-lg btn-default">
+            <span class="fa fa-home"></span>
+          </button>
+        </a>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-12">
+
+          <!-- Current Tables in Use -->
+          <div class="card">
+            <div class="card-header">
+              <h4>Current Reservations</h4>
+            </div>
+            <div class="card-body">
+              <ul id="tableList" class="list-group"></ul>
+            </div>
+          </div>
+
+          <!-- Waiting List Card -->
+          <div class="card mt-4">
+            <div class="card-header">
+              <h4>Waiting List</h4>
+            </div>
+            <div class="card-body">
+              <ul id="waitList" class="list-group"></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <footer class="footer mt-4">
+        <div class="container">
+          <p>Control Panel</p>
+          <p><a href="#" id="clear">Clear Table</a> | <a href="/api/servelist">API Table Link</a> | <a
+              href="/api/waitlist">API
+              Wait List</a>
+        </div>
+      </footer>
+
+    </div>
+
+</body>
+
+<script type="text/javascript">
+
+function waitListQuery() {
+    $.ajax({ url: "/api/waitlist", method: "GET" })
+        .then(function (waitData) {
+            console.log(waitData);
+            console.log("----------------------------");
+
+            for (i = 0; i < waitData.length; i++) {
+
+                var waitList = $("#waitList");
+
+                var listItem = $("<li class='list-group-item mt-4'>");
+
+                listItem.append(
+                    $("<h2>").text("Table #" + (i + 1)),
+                    $("<hr>"),
+                    $("<h2>").text("ID: " + waitData[i].uniqueID),
+                    $("<h2>").text("Name: " + waitData[i].name),
+                    $("<h2>").text("Phone: " + waitData[i].phoneNumber),
+                    $("<h2>").text("Email: " + waitData[i].email)
+                );
+            }
+        });
+}
+
+function serveListQuery() {
+    $.ajax({ url: "/api/servelist", method: "GET" })
+        .then(function (tableData) {
+            console.log(tableData);
+            console.log("----------------------------");
+
+            for (i = 0; i < tableData.length; i++) {
+                var tableList = $("#tableList");
+
+                var listItem = $("<li class='list-group-item mt-4'>");
+
+                listItem.append(
+                    $("<h2>").text("Table #" + (i + 1)),
+                    $("<hr>"),
+                    $("<h2>").text("ID: " + tableData[i].uniqueID),
+                    $("<h2>").text("Name: " + tableData[i].name),
+                    $("<h2>").text("Phone: " + tableData[i].phoneNumber),
+                    $("<h2>").text("Email: " + tableData[i].email)
+                );
+
+                tableList.append(listItem);
+            }
+        });
+}
+
+  // // This function resets all of the data in our tables. This is intended to let you restart a demo.
+  // function clearTable() {
+  //   alert("Clearing...");
+
+  //   // Clear the tables on the server and then empty the elements on the client
+  //   $.ajax({ url: "/api/clear", method: "POST" }).then(function () {
+  //     $("#waitList").empty();
+  //     $("#tableList").empty();
+  //   });
+  // }
+
+  // $("#clear").on("click", clearTable);
+
+
+  // // Run Queries!
+  // // ==========================================
+  // runTableQuery();
+  // runWaitListQuery();
+
+
+</script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="server.js"></script>
+
+</html>
